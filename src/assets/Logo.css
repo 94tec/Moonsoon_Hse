@@ -1,0 +1,73 @@
+/* Logo.css */
+:root{
+    --background-color: #fff;
+    --background-Maincolor: #051622;
+    --background-color1: #1ba098;
+    --background-color2: #deb992;
+    --btnColor: #007bff;
+    --navTextColor: #4ac6d2;
+    --background-color5: #45af2a;
+    --background-color6: #3fddc1;
+    --btnColorPrimary: #d56cd6;
+  }
+.logo-container {
+    position: relative;
+    width: 100px; /* Logo width */
+    height: 100%; /* Logo height */
+    /*background-color: #007bff;  Background color of the logo */
+    color: white; /* Color of the text/initials inside the logo */
+    display: flex; /* These next lines center the text inside the circle */
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif; /* Font family of the text */
+    font-size: 24px; /* Size of the initials inside the logo */
+    font-weight: bold; /* Makes the initials bold */
+  }
+  .logo-container .imgLogo{
+    position: relative;
+    width: 40px;
+    height: 40px;
+    z-index: 3;
+  } 
+  .logo-container::after{
+    content: 'tec';
+    position: absolute;
+    top: 0;
+    left: 66%;
+    right: 0;
+    width: 40px;
+    height: 20px;
+    font-size: 18px;
+    font-weight: 100;
+    margin-left: -6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--navTextColor);
+    border-radius: .3rem;
+    color: #fff;
+    z-index: 4;
+  }
+  .logo-container span{
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  
+  .logo-container::before {
+    top: 0;
+    transform: translateY(-50%);
+  }
+  
+  .logo-container::after {
+    bottom: 0;
+    transform: translateY(50%);
+  }
+  

@@ -1,0 +1,56 @@
+/* File: src/layout.css */
+
+.home-container {
+    display: grid;
+    grid-template-areas:
+      'topnav topnav topnav'
+      'sidenav main main';
+    grid-template-columns: 1fr 3fr; /* Adjust the ratio between sidebar and main content */
+    grid-template-rows: auto 1fr;
+    height: calc(100vh - 70px);
+  }
+  
+  .home-container .topnav {
+    grid-area: topnav;
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+  }
+
+  .introductionArea {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    height: 30px;
+    padding: 10px;
+    border: 2px solid var(--background-color); /* Background color of the navigation bar */
+    border-radius: .6rem;
+    color: var(--navTextColor); /* Text color */
+  }
+
+  .intro-text {
+    margin-bottom: 20px;
+  }
+
+  .user-details {
+    border-radius: 5px;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .home-container .sidenav {
+    grid-area: sidenav;
+    background-color: #888;
+    color: white;
+    padding: 1rem;
+  }
+  
+  .home-container .main {
+    grid-area: main;
+    padding: 1rem;
+  }
+  

@@ -1,0 +1,132 @@
+:root{
+    --background-color: #fff;
+    --background-Maincolor: #051622;
+    --background-color1: #1ba098;
+    --background-color2: #deb992;
+    --btnColor: #007bff;
+    --navTextColor: #4ac6d2;
+    --background-color5: #45af2a;
+    --background-color6: #3fddc1;
+    --btnColorPrimary: #d56cd6;
+  }
+  .login-form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--background-color);
+    color: var(--navTextColor);
+    border-radius: .6rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .login-form-container .close-icon{
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 20px;
+
+  }
+  .login-form-container .close-icon:hover{
+    transform: scale(1.2);
+
+  }
+  
+  .login-form-container .login-form {
+    width: 100%; /* Set the form width to fill the container */
+    max-width: 400px; /* Optionally, set a maximum width */
+  }
+  
+  .login-form-container .login-form .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .login-form-container .login-form .input-icon {
+    margin-right: 10px; /* Adjust the spacing between the icon and input */
+  }
+  
+  .login-form-container .login-form .input-field {
+    flex: 1; /* Make the input field fill the remaining space */
+    border: 1px solid var(--navTextColor);
+    outline: none;
+    background: inherit;
+    border-radius: .6rem;
+    padding: 7px;
+    color: var(--navTextColor);
+  }
+  .login-form-container .login-form .input-field:hover {
+    border-radius: 1px solid var(--btnColor);
+    border-top: transparent;
+    border-left: transparent;
+    border-right: transparent;
+  }
+  
+  .login-form-container .login-form .error-message {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+    color: red; /* Customize error message color */
+  }
+  .login-form-container .login-form .login-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+  }
+  
+  .login-form-container .login-form .login-button:hover {
+    background-color: #0056b3;
+  }
+  .login-form-container .login-form .forgot-password{
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .login-form-container .login-form .forgot-password a{
+    color: var(--navTextColor);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .login-form-container .login-form .forgot-password a:hover{
+    text-decoration: underline;
+    color: var(--btnColor);
+  }
+  .login-form-container .login-form .login-via-google{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    padding: 3px 0;
+    color: var(--btnColor);
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  .login-form-container .login-form .login-via-google:hover{
+    transform: scale(1.1);
+  }
+  .login-form-container .login-form .login-via-google .google-logo{
+    width: 100px;
+    height: 40px;
+    transform: translateY(3px);
+    margin-left: 3px;
+  }

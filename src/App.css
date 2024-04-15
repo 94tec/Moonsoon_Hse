@@ -1,0 +1,18 @@
+:root{
+  --background-Maincolor: #0e0e0e;
+  --background-color: #1c2f3b;
+  --background-color1: #1ba098;
+  --background-color2: #deb992;
+  --background-color3: #9e15bf;
+  --background-color4: #4ac6d2;
+  --background-color5: #45af2a;
+  --background-color6: #3fddc1;
+  --background-color7: #d56cd6;
+}
+#root {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.6rem;
+  text-align: center;
+  background: var(--background-color0);
+}

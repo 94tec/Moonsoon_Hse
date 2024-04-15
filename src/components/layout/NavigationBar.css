@@ -1,0 +1,140 @@
+/* NavigationBar.css */
+:root{
+  --background-color: #fff;
+  --background-Maincolor: #051622;
+  --background-color1: #1ba098;
+  --background-color2: #deb992;
+  --btnColor: #007bff;
+  --navTextColor: #4ac6d2;
+  --background-color5: #45af2a;
+  --background-color6: #3fddc1;
+  --btnColorPrimary: #d56cd6;
+}
+
+/* NavigationBar.css */
+
+.navbar {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: var(--background-color); /* Background color of the navigation bar */
+  border-top-left-radius: .6rem;
+  border-top-right-radius: .6rem;
+  color: var(--navTextColor); /* Text color */
+}
+.logo{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.logo h4{
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--btnColor);
+}
+.nav-links {
+  display: flex;
+  gap: 20px; /* Adjust gap between links as needed */
+}
+
+.nav-link {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  padding-bottom: 5px; /* Initial bottom padding */
+}
+
+.nav-link .indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px; /* Height of bottom indicator */
+  background-color: var(--navTextColor); /* Color of bottom indicator */
+  transition: width 0.3s ease; /* Transition for width change */
+}
+
+.nav-link:hover .indicator {
+  width: 100%; /* Expand width on hover */
+}
+.nav-link.active .nav-text {
+  color: var(--btnColor); /* Change to your desired color */
+  font-weight: 600; /* Optionally, add additional styles */
+}
+.profile-area{
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-area .button{
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: none;
+  outline: none;
+  background-color: var(--btnColor);
+  color: #fff;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+}
+.profile-area .button:hover{
+  background-color: #0056b3;
+}
+.profile-area .select{
+  padding:5px 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 2px solid var(--btnColor);
+  color: var(--navTextColor);
+  margin-left: 10px;
+}
+.profile-area .select:hover{
+  background-color: #f7f1f1;
+}
+.user-profile-area{
+  margin-left: 20px;
+}
+.dropdown{
+  width:100%;
+  height: 100%;
+  border-radius: .4rem;
+  background: transparent;
+  outline: none;
+  border: 2px solid #0056b3;
+  color: #0056b3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+
+}
+.dropdown option[value="profile"] {
+  /* Add styles to set icon for profile option */
+  background-image: url('path_to_profile_icon.svg');
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-left: 20px; /* Adjust padding to accommodate icon */
+}
+
+.dropdown option[value="settings"] {
+  /* Add styles to set icon for settings option */
+  background-image: url('path_to_settings_icon.svg');
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-left: 20px; /* Adjust padding to accommodate icon */
+}
+
+.dropdown option[value="signout"] {
+  /* Add styles to set icon for sign out option */
+  background-image: url('path_to_signout_icon.svg');
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-left: 20px; /* Adjust padding to accommodate icon */
+}
+  

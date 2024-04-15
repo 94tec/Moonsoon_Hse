@@ -1,0 +1,141 @@
+.signup-form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  color: #4ac6d2;
+  border-radius: .6rem;
+  padding: 10px 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.signup-form-container .close-icon {
+  position: absolute;
+  top: 6px;
+  right: 9px;
+  font-size: 20px;
+}
+
+.signup-form-container .close-icon:hover {
+  transform: scale(1.2);
+}
+
+.signup-form-container .signup-form {
+  width: 100%;
+}
+
+.signup-form-container .signup-form .form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.signup-form-container .signup-form .form-group label{
+  font-size: 16px;
+}
+.signup-form-container .signup-form .input-icon {
+  margin-right: 8px;
+}
+
+.signup-form-container .signup-form .input-field {
+  flex: 1;
+  border: 1px solid #4ac6d2;
+  outline: none;
+  background: inherit;
+  border-radius: .6rem;
+  padding: 7px;
+  color: #4ac6d2;
+}
+
+.signup-form-container .signup-form .error-message {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+  color: red; /* Customize error message color */
+}
+
+.signup-form-container .signup-form .signup-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 10px;
+}
+
+.signup-form-container .signup-form .signup-button:hover {
+  background-color: #0056b3;
+}
+.signup-form-container .column {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1; /* Make the columns grow to fill available space */
+  margin-bottom: 20px;
+  column-gap: 16px;
+}
+/* CSS for radio buttons */
+.radio-group {
+  display: flex;
+  gap: 5px;
+}
+
+/* Hide the default radio button */
+.radio-group input[type="radio"] {
+  appearance: none;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* Custom radio button styles */
+.radio-group input[type="radio"] + label {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding-left: 20px; /* Adjust as needed */
+  margin-right: 5px;
+}
+
+/* Radio button dot */
+.radio-group input[type="radio"] + label:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 16px; /* Size of the dot */
+  height: 16px; /* Size of the dot */
+  border-radius: 50%;
+  border: 2px solid #333; /* Default border color */
+  background-color: #fff; /* Default background color */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Radio button dot when checked */
+.radio-group input[type="radio"]:checked + label:before {
+  background-color: #333; /* Change background color when checked */
+  border-color: #333; /* Change border color when checked */
+}
+
+/* Radio button label text */
+.radio-group label {
+  font-size: 16px;
+  color: #333; /* Default label color */
+}
+
+/* Radio button label text when checked */
+.radio-group input[type="radio"]:checked + label {
+  font-weight: bold; /* Example: Change font weight when checked */
+  color: #333; /* Example: Change label color when checked */
+}
+
+
