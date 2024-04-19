@@ -68,45 +68,33 @@
   }
   
   .property-container-main {
+    position: relative;
     grid-area: main;
-    padding: 8px;
-    background-color: var(--background-color); /* Background color of the navigation bar */
-  }
-  /* Container styles */
-  .property_form_container {
-    max-width: 95%;
-    margin: 0 auto;
-    transition: opacity 0.3s ease-in-out;
-  }
-  /* Form styles */
-  .form {
-    padding: 8px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  }
-  .property-form-h4{
+    display: flex;
+    padding: 10px;
+    background-color: var(--background-color);  /*Background color of the navigation bar */
     color: var(--navTextColor);
-    font-size: 12px;
     font-family: 'Montserrat';
   }
-  .slider-content {
-    display: flex;
-    flex-direction: column;
-    color: var(--navTextColor);
-  }
-  .slider-content-fields{
+  .field-grid {
+    width: 90%;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(calc(25% - 10px), 1fr)); /* Ensure four fields in one row with margin between */
-    gap: 10px; /* Adjust margin between fields */
-  }
-  .slider-content .field {
-      margin-bottom: 10px; /* Adjust margin between rows */
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
   }
 
-  /* Styles for fields within each group */
-  .field > label {
-      grid-column: span 3; /* Each label spans three columns */
-      margin-bottom: 5px; /* Adjust margin below label */
+  .field-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+  }
+  .field-label {
+    text-transform: capitalize;
+    align-self: flex-start; /* Align label with start of input field */
+  }
+  .field-input {
+    padding: 4px;
   }
   .addRoom {
     width: 100%;
@@ -122,13 +110,6 @@
     cursor: pointer;
     width: 10%;
 }
-
-  /* Media query for wide-screen displays */
-  @media screen and (min-width: 1200px) {
-      .slider-content {
-          grid-template-columns: repeat(auto-fill, minmax(calc(20% - 10px), 1fr)); /* Ensure five fields in one row with margin between */
-      }
-  }
   .slider-controls{
     display: flex;
     align-items: center;
@@ -189,12 +170,13 @@
   
   .add_room_form div .row input {
     flex-grow: 1; /* Make input fill remaining space */
+    padding: 8px 16px;
     border: 2px solid var(--navTextColor);
   }
 /* Styling for select options */
   .roomCategory{
     flex-grow: 1; /* Make input fill remaining space */
-    padding: 8px 16px;
+    padding: 8px 14px;
     background: transparent;
     border: 2px solid var(--navTextColor);
     border-radius: 5px;
@@ -205,7 +187,6 @@
   background-color: #fff;
   color: #555;
   font-size: 16px;
-  text-align: center;
   margin-bottom: 4px;
   cursor: pointer;
 }

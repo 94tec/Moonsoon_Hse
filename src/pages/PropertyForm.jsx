@@ -1,16 +1,139 @@
 import React, { useState } from 'react';
-import { 
-    TextField, Button, Grid, Typography, MenuItem, Popper, Paper, ClickAwayListener 
-} from '@mui/material'; // Import Popper, Paper, and ClickAwayListener  } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup'; // for form validation
+import { TextField,MenuItem, Button, Grid, Typography, Box} from '@mui/material';
 import axios from 'axios';
-import RoomForm from './RoomForm';
 
 const PropertyForm = () => {
-    const [selectedCounty, setSelectedCounty] = useState('');
-    const [selectedCurrency, setSelectedCurrency] = useState('');
-    const [selectedYear, setSelectedYear] = useState('');
+    const [formData, setFormData] = useState({
+        property_title: '',
+        property_description: '',
+        street: '',
+        city: '',
+        county: '',
+        nearby_amenities: '',
+        year_built: '',
+        condition: '',
+        unit_number: '',
+        property_type: '', 
+        size: '',
+        estimated_price: '',
+        currency: '',
+        additional_costs: '',
+        floor_plan: '',
+        contact_person: '',
+        phone_number: '',
+        email_address: '',
+        security_features: '',
+        safety_features: '',
+        owner_fullname: '',
+        owner_idNumber: '',
+        owner_email: '',
+        legal_documentation: ''        
+    });
+    const [activeGroup, setActiveGroup] = useState(0); // State to track active slider group
+    const [isValid, setIsValid] = useState(true);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+    const handleGroupChange = (index) => {
+        setActiveGroup(index);
+    };
+    const handleSubmit = async () => {
+        try {
+            // Construct the request body object
+            const requestBody = {
+                property_title: formData.property_title,
+                property_description: formData.property_description,
+                nearby_amenities: formData.nearby_amenities,
+                location: {
+                    county: formData.county,
+                    city: formData.city,
+                    street: formData.street
+                },
+                year_built: formData.year_built,
+                condition: formData.condition,
+                units: [  // Add the units field here
+                {
+                    unit_number: formData.unit_number,
+                    property_type: formData.property_type,
+                    size: formData.size,
+                    financial_information: {
+                        estimated_price: formData.estimated_price,
+                        currency: formData.currency,
+                        additional_costs: formData.additional_costs
+                    }
+                }
+            ],
+                contact_information: {
+                    contact_person: formData.contact_person,
+                    contact_details: {
+                        phone_number: formData.phone_number,
+                        email_address: formData.email_address
+                    }
+                },
+                security_and_safety: {
+                    security_features: formData.security_features,
+                    safety_features: formData.safety_features
+                },
+                legal_information: {
+                    ownership_details: {
+                        owner_fullname: formData.owner_fullname,
+                        owner_idNumber: formData.owner_idNumber,
+                        owner_email: formData.owner_email
+                    },
+                    legal_documentation: formData.legal_documentation
+                }
+                // Add more fields as needed
+            };
+    
+            // Frontend validation
+            if (!formData.property_title || !formData.property_description || !formData.street || !formData.city || !formData.county) {
+                console.error('Error: Please fill in all required fields.');
+                return;
+            }
+    
+            const token = localStorage.getItem('token');
+            console.log('FormData:', formData);
+            const response = await axios.post('http://localhost:8000/api/users/properties', requestBody, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log('Response:', response.data);
+            // Reset form after successful submission if needed
+            setFormData({
+                property_title: '',
+                property_description: '',
+                street: '',
+                city: '',
+                county: '',
+                nearby_amenities: '',
+                year_built: '',
+                condition: '',
+                unit_number: '',
+                property_type: '',
+                size: '',
+                estimated_price: '',
+                currency: '',
+                additional_costs: '',
+                floor_plan: '',
+                contact_person: '',
+                phone_number: '',
+                email_address: '',
+                security_features: '',
+                safety_features: '',
+                owner_fullname: '',
+                owner_idNumber: '',
+                owner_email: '',
+                legal_documentation: ''
+            });
+        } catch (error) {
+            console.error('Error submitting property:', error);
+        }
+    };
     const kenyaCounties = [
         "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo Marakwet", "Embu", "Garissa", "Homa Bay", "Isiolo", "Kajiado",
         "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu",
@@ -18,369 +141,172 @@ const PropertyForm = () => {
         "Narok", "Nyamira", "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka Nithi",
         "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
     ];
-    // Define currencies
-    const currencies = ["USD", "EUR", "KES", ]; // Add more currencies as needed
-    // Define group schemas
-    const { propertyBasicInfoGroup, roomsAndPriceInformationGroup, securityAndOwnershipDetailsGroup } = {
-        propertyBasicInfoGroup: {
-            property_title: Yup.string().required('Property title is required'),
-            property_description: Yup.string().required('Property description is required'),
-            county: Yup.string().required('Postal code is required'),
-            city: Yup.string().required('City is required'),
-            street: Yup.string().required('Street is required'),
-            nearby_amenities: Yup.string().required('Nearby amenities are required'),
-            parking: Yup.string().notRequired(),
-            accessibility_features: Yup.string().notRequired(),
-            year_built: Yup.string().required('Year built is required'),
-            condition: Yup.string().notRequired(),
-            
-        },
-        roomsAndPriceInformationGroup: {
-            unitNumber: Yup.string().required('Unit number is required'),
-            size: Yup.string().required('Size is required'),
-            estimated_price: Yup.string().required('Price is required'),
-            currency: Yup.string().required('Currency is required'),//select field
-            floor_plan: Yup.string().required('Floor plan is required'),
-            
-        },
-        securityAndOwnershipDetailsGroup: {
-            contact_person: Yup.string().required('Contact person is required'),
-            phone: Yup.string().required('Phone is required'),
-            email: Yup.string().email('Invalid email format').required('Email is required'),
-            security_features: Yup.string().required('Security features are required'),
-            safety_features: Yup.string().required('Safety features are required'),
-            owner_fullname: Yup.string().required('Ownership details are required'),
-            owner_idNumber: Yup.string().required('Ownership details are required'),
-            owner_email: Yup.string().required('Ownership details are required'),
-            legal_documentation: Yup.string().required('Legal documentation is required')
-        }
-    };
 
-    const initialValues = {
-        propertyBasicInfoGroup: {
-            property_title: '',
-            property_description: '',
-            location: {
-                street: '',
-                city: '',
-                county: '',
-            },
-            nearby_amenities: '',
-            year_built: '',
-            condition: ''
-            
-        },
-        roomsAndPriceInformationGroup: {
-            unitNumber: '',
-            size: '',
-            financial_information: {
-                estimated_price: '',
-                currency: '',
-                additional_costs: ''
-            },
-            floor_plan: ''
-        },
-        securityAndOwnershipDetailsGroup: {
-            contact_information: {
-                contact_person: '',
-                contact_details: {
-                    phone: '',
-                    email: ''
-                }
-            },
-            security_and_safety: {
-                security_features: '',
-                safety_features: ''
-            },
-            legal_information: {
-                owner_fullname: '',
-                owner_idNumber: '',
-                owner_email: '',
-                legal_documentation: ''
-            }
-        }
-    };
-    
-    // Define validation schema
-    const validationSchema = Yup.object().shape({
-        propertyBasicInfoGroup: Yup.object().shape(propertyBasicInfoGroup),
-        roomsAndPriceInformationGroup: Yup.object().shape(roomsAndPriceInformationGroup),
-        securityAndOwnershipDetailsGroup: Yup.object().shape(securityAndOwnershipDetailsGroup)
-    });
-    // Define state for current group index
-    const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
-    const [isRoomFormOpen, setIsRoomFormOpen] = useState(false); // State to manage the visibility of the room form
-
+    const currencies = ["USD", "EUR", "KES"]; // Define currencies
     // Define groups array for slider content
     const groups = [
-        { name: "Property Basic Info", fields: propertyBasicInfoGroup },
-        { name: "Rooms and Price Information", fields: roomsAndPriceInformationGroup },
-        { name: "Security Features and Ownership Details", fields: securityAndOwnershipDetailsGroup }
+        { 
+            name: "Property Basic Info", 
+            fields: ['property_title', 'property_description', 'county', 'city', 'street', 'nearby_amenities', 'year_built', 'condition'] 
+        },
+        { 
+            name: "Rooms and Price Information", 
+            fields: ['unit_number', 'property_type', 'size', 'estimated_price', 'currency', 'additional_costs', 'floor_plan'] 
+        },
+        { 
+            name: "Security Features and Ownership Details", 
+            fields: ['contact_person', 'phone_number', 'email_address', 'security_features', 'safety_features', 'owner_fullname', 'owner_idNumber', 'owner_email', 'legal_documentation'] 
+        }
     ];
-
-    // Function to handle moving to the previous group
-    const handlePrevious = () => {
-        setCurrentGroupIndex((prevIndex) => Math.max(0, prevIndex - 1));
-    };
-
-    // Function to handle moving to the next group
     const handleNext = () => {
-        setCurrentGroupIndex((prevIndex) => Math.min(groups.length - 1, prevIndex + 1));
-    };
-    // Function to toggle the visibility of the room form
-    const toggleRoomForm = () => {
-        setIsRoomFormOpen((prevState) => !prevState);
-    };
-
-    // Function to recursively render form fields
-    const renderFields = (fields) => {
-        return Object.entries(fields).map(([fieldName, fieldSchema]) => {
-            // Check if field has validation schema defined
-            const validationRule = validationSchema.fields[fieldName];
-            // Check if field is required
-            const isRequired = validationRule && validationRule._exclusive.required === true;
-            // Render select input for "Year Built" field
-            if (fieldName === 'year_built') {
-               // Generate years options
-                const currentYear = new Date().getFullYear();
-                const yearsOptions = Array.from({ length: 50 }, (_, index) => currentYear - index);
-
-                return (
-                    <div key={fieldName} className="field">
-                        <Field
-                            name={fieldName}
-                            as={TextField}
-                            select
-                            fullWidth
-                            margin="normal"
-                            label={isRequired ? `${fieldName}*` : fieldName}
-                            value={selectedYear} // Provide the value prop to make it controlled
-                            onChange={(event) => setSelectedYear(event.target.value)} // Handle onChange to update the selected value
-                            InputLabelProps={{ shrink: true }}
-                            // Customize menu properties
-                            SelectProps={{
-                                displayEmpty: true,
-                                MenuProps: {
-                                    PaperProps: {
-                                        style: {
-                                            maxHeight: 200, // Set max height of the menu
-                                        },
-                                    },
-                                },
-                            }}
-                            placeholder="Select Year Built"
-                        >
-                            <MenuItem value="" disabled>
-                                Select Year Built
-                            </MenuItem>
-                            {yearsOptions.map((year) => (
-                                <MenuItem key={year} value={year}>
-                                    {year}
-                                </MenuItem>
-                            ))}
-                        </Field>
-                    </div>
-                );
-            }
-            // Render select input for "County" field
-            if (fieldName === 'county') {
-                return (
-                    <div key={fieldName} className="field">
-                        <Field
-                            name={fieldName}
-                            as={TextField}
-                            select
-                            fullWidth
-                            margin="normal"
-                            label={isRequired ? `${fieldName}*` : fieldName}
-                            value={selectedCounty} // Provide the value prop to make it controlled
-                            onChange={(event) => setSelectedCounty(event.target.value)} // Handle onChange to update the selected value
-                            SelectProps={{
-                                displayEmpty: true,
-                                MenuProps: {
-                                    PaperProps: {
-                                        style: {
-                                            maxHeight: 200, // Set max height of the menu
-                                        },
-                                    },
-                                },
-                            }}
-                            placeholder="Select County"
-                            InputLabelProps={{ shrink: true }}
-                        >
-                            <MenuItem value="" disabled>
-                                Select County
-                            </MenuItem>
-                            {kenyaCounties.map((county) => (
-                                <MenuItem key={county} value={county}>
-                                    {county}
-                                </MenuItem>
-                            ))}
-                        </Field>
-                    </div>
-                );
-            }
-            // Render select input for "Currency" field
-            if (fieldName === 'currency') {
-                return (
-                    <div key={fieldName} className="field">
-                        <Field
-                            name={fieldName}
-                            as={TextField}
-                            select
-                            fullWidth
-                            margin="normal"
-                            label={isRequired ? `${fieldName}*` : fieldName}
-                            value={selectedCurrency} // Provide the value prop to make it controlled
-                            onChange={(event) => setSelectedCurrency(event.target.value)} // Handle onChange to update the selected value
-                            SelectProps={{
-                                displayEmpty: true,
-                                MenuProps: {
-                                    PaperProps: {
-                                        style: {
-                                            maxHeight: 200, // Set max height of the menu
-                                        },
-                                    },
-                                },
-                            }}
-                            placeholder="Select Currency"
-                            InputLabelProps={{ shrink: true }}
-                        >
-                            <MenuItem value="" disabled>
-                                Select Currency
-                            </MenuItem>
-                            {currencies.map((currency) => (
-                                <MenuItem key={currency} value={currency}>
-                                    {currency}
-                                </MenuItem>
-                            ))}
-                        </Field>
-                    </div>
-                );
-            }
-            return (
-                <div key={fieldName} className="field">
-                    <Field
-                        name={fieldName}
-                        as={TextField}
-                        fullWidth
-                        margin="normal"
-                        label={isRequired ? `${fieldName}*` : fieldName} // Append asterisk if field is required
-                        placeholder={fieldName}
-                        InputLabelProps={{ shrink: true }} // Ensure label shrinks when input is focused
-                    />
-                </div>
-            );
-        });
-    };
-    // Function to handle room form submission
-    const handleRoomFormSubmit = (roomFormData) => {
-        // Process the submitted room data here
-        console.log('Submitted room data:', roomFormData);
-        // Close the room form
-        setIsRoomFormOpen(false);
-    };
-   // Your form submission function
-    const handleSubmit = async (values, actions, propertyData) => {
-        try {
-            const response = await axios.post('http://localhost:8000/api/users/properties', propertyData);
-            console.log('Property submitted successfully:', response.data);
-            // Reset the form after successful submission if needed
-            setPropertyData({
-                // Reset property data fields here
-            });
-        } catch (error) {
-            console.error('Error submitting property:', error);
-        } finally {
-            if (actions) {
-                actions.setSubmitting(false); // Manually set submitting to false after form submission
-            }
+        // Check if all fields in the current group are filled out
+        const currentGroup = groups[activeGroup];
+        const isValidGroup = currentGroup.fields.every(field => formData[field]);
+        setIsValid(isValidGroup);
+        
+        // If valid, proceed to the next group
+        if (isValidGroup && activeGroup < groups.length - 1) {
+            setActiveGroup(activeGroup + 1);
         }
     };
-
     return (
-        <>
-            {/* Conditionally render the property form container based on the isRoomFormOpen state */}
-            {!isRoomFormOpen && (
-                <Grid className='property_form_container' justifyContent="center">
-                    <Grid item xs={12} md={6}>
-                        <Typography className='property-form-h4' variant="h4" gutterBottom>
-                            Property Form
-                        </Typography>
-                        <Formik
-                            initialValues={initialValues}
-                            validationSchema={validationSchema}
-                            onSubmit={(values, actions) => handleSubmit(values, actions, propertyData)} // Pass propertyData as a parameter
-                        >
-                            {({ isSubmitting }) => (
-                                <Form className="form">
-                                    {/* Render form fields */}
-                                    {/* Your form fields rendering code here */}
-                                    <div className="slider-content">
-                                        <Typography variant="h6" gutterBottom>
-                                            {groups[currentGroupIndex].name}
-                                        </Typography>
-                                        <div className="slider-content-fields">{renderFields(groups[currentGroupIndex].fields)}</div>
-                                        <div className='addRoom'>
-                                            {currentGroupIndex === 1 && (
-                                                <Button
-                                                    type="button"
-                                                    variant="contained"
-                                                    color="primary"
-                                                    className="addRoomBtn"
-                                                    onClick={toggleRoomForm} // Toggle the visibility of the room form
+        <Grid container >
+            <Grid item xs={12}>
+                <Typography variant="h4" gutterBottom>
+                    Property Form
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                {/* Slider buttons */}
+                {groups.map((group, index) => (
+                    <Button 
+                        key={index} 
+                        onClick={() => setActiveGroup(index)} 
+                        variant={activeGroup === index ? 'contained' : 'outlined'}
+                        style={{ marginRight: index !== groups.length - 1 ? '10px' : 0 }} // Add margin to all buttons except the last one
+                    >
+                        {group.name}
+                    </Button>
+                ))}
+            </Grid>
+            <Grid item xs={12}>
+                {/* Slider content */}
+                {groups.map((group, index) => (
+                    <div key={index} style={{ display: index === activeGroup ? 'block' : 'none' }}>
+                        <Typography variant="h6" gutterBottom>{group.name}</Typography>
+                        <div className="field-grid">
+                            {group.fields.map((fieldName, idx) => (
+                                <Box key={idx} className="field-box">
+                                    <Typography className="field-label">{fieldName}</Typography>
+                                    {/* Render TextField or Select based on field name */}
+                                    {(() => {
+                                        if (fieldName === 'year_built' || fieldName === 'county' || fieldName === 'currency') {
+                                            return (
+                                                <TextField
+                                                    fullWidth
+                                                    name={fieldName}
+                                                    value={formData[fieldName]}
+                                                    onChange={handleChange}
+                                                    select
+                                                    InputLabelProps={{ shrink: true }}
+                                                    SelectProps={{
+                                                        displayEmpty: true,
+                                                        MenuProps: {
+                                                            PaperProps: {
+                                                                style: {
+                                                                    maxHeight: 200, // Set max height of the menu
+                                                                },
+                                                            },
+                                                        },
+                                                    }}
+                                                    placeholder={`Select ${fieldName.replace('_', ' ')}`}
+                                                    className="field-input"
                                                 >
-                                                    Add Room
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="slider-controls">
-                                        <Button
-                                            type="button"
-                                            variant="contained"
-                                            color="primary"
-                                            disabled={currentGroupIndex === 0}
-                                            onClick={handlePrevious}
-                                        >
-                                            Previous
-                                        </Button>
-                                        <Button
-                                            type="button"
-                                            variant="contained"
-                                            color="primary"
-                                            disabled={currentGroupIndex === groups.length - 1}
-                                            onClick={handleNext}
-                                        >
-                                            Next
-                                        </Button>
-                                    </div>
-                                    {/* Render submit button in the last slider */}
-                                    
-                                    {currentGroupIndex === groups.length - 1 && (
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            color="primary"
-                                            disabled={isSubmitting}
-                                            className="submit-btn"
-                                            onClick={handleSubmit}
-                                        >
-                                            Submit
-                                        </Button>
-                                    )}
-                                </Form>
-                            )}
-                        </Formik>
-                    </Grid>
-                </Grid>
-            )}
-
-            {/* Render the RoomForm component if isRoomFormOpen is true */}
-            {isRoomFormOpen && (
-                <RoomForm isOpen={isRoomFormOpen} onClose={toggleRoomForm} onSubmit={handleRoomFormSubmit} />
-            )}
-        </>
+                                                    <MenuItem value="" disabled>
+                                                        {`Select ${fieldName.replace('_', ' ')}`}
+                                                    </MenuItem>
+                                                    {/* Render options for select fields */}
+                                                    {fieldName === 'year_built' && (
+                                                        Array.from({ length: 50 }, (_, index) => (
+                                                            <MenuItem key={index} value={new Date().getFullYear() - index}>
+                                                                {new Date().getFullYear() - index}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'county' && (
+                                                        kenyaCounties.map((county, idx) => (
+                                                            <MenuItem key={idx} value={county}>
+                                                                {county}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'currency' && (
+                                                        currencies.map((currency, idx) => (
+                                                            <MenuItem key={idx} value={currency}>
+                                                                {currency}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                </TextField>
+                                            );
+                                        } else {
+                                            // Render regular TextField
+                                            return (
+                                                <TextField
+                                                    fullWidth
+                                                    name={fieldName}
+                                                    value={formData[fieldName]}
+                                                    onChange={handleChange}
+                                                    placeholder={
+                                                        fieldName === 'property_title' ? "Enter Property Title" :
+                                                        fieldName === 'property_description' ? "Enter Property Description" : 
+                                                        fieldName === 'street' ? "Enter Street" : 
+                                                        fieldName === 'city' ? "Enter City" : 
+                                                        fieldName === 'nearby_amenities' ? "Enter Nearby Amenities" : 
+                                                        fieldName === 'parking' ? "Parking Available" : 
+                                                        fieldName === 'accessibility_features' ? "Accessibility Features" : 
+                                                        fieldName === 'condition' ? "Enter Condition" : 
+                                                        fieldName === 'floor_plan' ? "Floor Plan" : 
+                                                        fieldName === 'unit_number' ? "Enter Unit Number" : 
+                                                        fieldName === 'size' ? "Enter Size" : 
+                                                        fieldName === 'estimated_price' ? "Enter Estimated Price" : 
+                                                        fieldName === 'contact_person' ? "Enter Contact Person" : 
+                                                        fieldName === 'phone_number' ? "Enter Phone Number" : 
+                                                        fieldName === 'email_address' ? "Enter Email Address" : 
+                                                        fieldName === 'security_features' ? "Enter Security Features" : 
+                                                        fieldName === 'safety_features' ? "Enter Safety Features" : 
+                                                        fieldName === 'owner_fullname' ? "Enter Owner Fullname" : 
+                                                        fieldName === 'owner_idNumber' ? "Enter Owner ID Number" : 
+                                                        fieldName === 'owner_email' ? "Enter Owner Email" : 
+                                                        fieldName === 'legal_documentation' ? "Enter Legal Documentation" : 
+                                                        ""
+                                                    }
+                                                    className="field-input"
+                                                />
+                                            );
+                                        }
+                                    })()}  
+                                </Box>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </Grid>
+            <Grid item xs={12}>
+                {/* Next button */}
+                {(activeGroup === 0 || activeGroup === 1) && (
+                    <Button variant="contained" color="primary" onClick={handleNext}>
+                        Next
+                    </Button>
+                )}
+                {/* Submit button */}
+                {activeGroup === groups.length - 1 && (
+                    <Button variant="contained" color="primary" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                )}
+            </Grid>
+        </Grid>
     );
 };
 

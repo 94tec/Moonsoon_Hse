@@ -28,7 +28,7 @@ const RoomForm = ({ onClose, onSubmit, isOpen }) => {
         <div>
         <div className='row'>
             <label htmlFor="roomNumber">Room Number:</label>
-            <input type="number" id="roomNumber" {...register('roomNumber', { required: true })} />
+            <input type="number" placeholder='Enter room number' id="roomNumber" {...register('roomNumber', { required: true })} />
         </div>
           {errors.roomNumber && <span>Room number is required</span>}
         </div>
@@ -43,6 +43,7 @@ const RoomForm = ({ onClose, onSubmit, isOpen }) => {
               <option value="Suite">One Bed Room</option>
               <option value="Suite">2 Bed Rooms</option>
               <option value="Suite">3 Bed Rooms</option>
+              <option value="Suite">Self-contained house</option>
               {/* Add more options as needed */}
             </select>
           </div>
@@ -51,14 +52,14 @@ const RoomForm = ({ onClose, onSubmit, isOpen }) => {
         <div>
         <div className='row'>
             <label htmlFor="pricePerRent">Price Per Rent:</label>
-            <input type="number" id="pricePerRent" {...register('pricePerRent', { required: true })} />
+            <input type="number" placeholder='Enter price per rent' id="pricePerRent" {...register('pricePerRent', { required: true })} />
         </div>
           {errors.pricePerRent && <span>Price per rent is required</span>}
         </div>
         <div>
             <div className='row'>
                 <label htmlFor="depositRequired">Deposit Required:</label>
-                <input type="number" id="depositRequired" {...register('depositRequired', { required: true })} />
+                <input type="number" placeholder='Enter deposit required' id="depositRequired" {...register('depositRequired', { required: true })} />
             </div>
           {errors.depositRequired && <span>Deposit required is required</span>}
         </div>
