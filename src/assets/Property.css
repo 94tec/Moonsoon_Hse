@@ -71,6 +71,7 @@
     position: relative;
     grid-area: main;
     display: flex;
+    justify-content: center;
     padding: 10px;
     background-color: var(--background-color);  /*Background color of the navigation bar */
     color: var(--navTextColor);

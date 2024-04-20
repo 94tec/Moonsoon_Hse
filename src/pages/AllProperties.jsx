@@ -1,10 +1,11 @@
 import React from 'react';
+import PropertyList from '../components/layout/PropertyList'
 
 const AllProperties = () => {
   return (
     <div>
-      <h2>All Properties</h2>
       {/* Display your properties here */}
+      <PropertyList />
     </div>
   );
 };
