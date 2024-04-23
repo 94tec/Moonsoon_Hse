@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableHead, TableBody, TableCell, TableRow, Typography } from '@mui/material';
+import { Table, TableHead, TableBody, TableCell, TableRow, Typography, Button } from '@mui/material';
 
 const PropertyList = () => {
     const [properties, setProperties] = useState([]);
@@ -23,13 +23,12 @@ const PropertyList = () => {
 
         fetchProperties();
     }, []);
-
     return (
         <div>
             <Typography variant="h4" gutterBottom>
                 Property List
             </Typography>
-            <Table>
+            <Table className='properties_table'>
                 <TableHead>
                     <TableRow>
                         <TableCell>Unit Number</TableCell>
@@ -42,6 +41,7 @@ const PropertyList = () => {
                         <TableCell>Contact Person</TableCell>
                         <TableCell>Phone Number</TableCell>
                         <TableCell>Email Address</TableCell>
+                        <TableCell>Action</TableCell>
                         {/* Add more table headers as needed */}
                     </TableRow>
                 </TableHead>
@@ -82,6 +82,14 @@ const PropertyList = () => {
                             <TableCell>{property.contact_information ? property.contact_information.contact_person : ''}</TableCell>
                             <TableCell>{property.contact_information.contact_details ? property.contact_information.contact_details.phone_number : ''}</TableCell>
                             <TableCell>{property.contact_information ? property.contact_information.contact_details.email_address : ''}</TableCell>
+                            <TableCell className='action'>
+                                <Button variant="contained" color="primary" onClick={() => handleAddRoom(property._id)}>
+                                    Add Room(s)
+                                </Button>
+                                <Button variant="outlined" color="primary" onClick={() => handleEditProperty(property._id)}>
+                                    Edit
+                                </Button>
+                            </TableCell>
                             {/* Add more table cells for additional data */}
                         </TableRow>
                     ))}

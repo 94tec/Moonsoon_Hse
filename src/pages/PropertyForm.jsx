@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { TextField,MenuItem, Button, Grid, Typography, Box} from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 const PropertyForm = () => {
@@ -29,6 +31,7 @@ const PropertyForm = () => {
         owner_email: '',
         legal_documentation: ''        
     });
+    const [errorMessage, setErrorMessage] = useState('');
     const [activeGroup, setActiveGroup] = useState(0); // State to track active slider group
     const [isValid, setIsValid] = useState(true);
     const handleChange = (e) => {
@@ -103,6 +106,10 @@ const PropertyForm = () => {
                 }
             });
             console.log('Response:', response.data);
+            toast.success('Property Created successfully!', {
+                position: 'top-center',
+                draggable: true,
+              });
             // Reset form after successful submission if needed
             setFormData({
                 property_title: '',
@@ -132,6 +139,20 @@ const PropertyForm = () => {
             });
         } catch (error) {
             console.error('Error submitting property:', error);
+            if (error.response) {
+                // If the error has a response object
+                setErrorMessage(error.response.data.message || 'An error occurred');
+              } else if (error.request) {
+                // If the request was made but no response was received
+                setErrorMessage('No response received from server');
+              } else {
+                // If an error occurred during the request setup
+                setErrorMessage('Error setting up the request');
+              }
+            toast.error('An error occurred! Failed to Create Property. Please try again.', {
+                position: 'top-center',
+                draggable: true,
+              });
         }
     };
     const kenyaCounties = [
@@ -306,6 +327,7 @@ const PropertyForm = () => {
                     </Button>
                 )}
             </Grid>
+            {errorMessage && <p>Error: {errorMessage}</p>}
         </Grid>
     );
 };

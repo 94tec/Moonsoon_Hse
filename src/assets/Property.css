@@ -76,6 +76,7 @@
     background-color: var(--background-color);  /*Background color of the navigation bar */
     color: var(--navTextColor);
     font-family: 'Montserrat';
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
   .field-grid {
     width: 90%;
@@ -83,6 +84,8 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    padding: 20px;
   }
 
   .field-box {
@@ -97,29 +100,13 @@
   .field-input {
     padding: 4px;
   }
-  .addRoom {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+  .action Button:nth-child(2){
+    margin-left: 10px;
   }
-  .addRoomBtn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #fff; /* Adjust button text color as needed */
-    cursor: pointer;
-    width: 10%;
-}
-  .slider-controls{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 10px;
-    margin-top: 10px;
-  }
-
+ .properties_table{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: .5rem;
+ }
   /*Room form css*/
   .add_room_container {
     width: 570px;
@@ -212,16 +199,5 @@
   }
 }
 
-  .add_room_form button[type="button"]{
-    margin-left: 20px;
-  }
-  .add_room_form input[type="submit"]:hover,
-  .add_room_form button[type="button"]:hover {
-    background-color: #0056b3;
-  }
-  
-  .add_room_form span {
-    color: red;
-  }
 
 

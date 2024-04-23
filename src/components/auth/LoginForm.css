@@ -130,3 +130,26 @@
     transform: translateY(3px);
     margin-left: 3px;
   }
+  /* Style for the blurred background */
+  .blur-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px); /* Adjust the blur intensity as needed */
+    z-index: 999; /* Ensure the background is behind other content */
+  }
+
+  /* Style for the loading toast */
+  .loading-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9); /* Adjust the background color and opacity */
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000; /* Ensure the toast is on top of the blurred background */
+  }
+
