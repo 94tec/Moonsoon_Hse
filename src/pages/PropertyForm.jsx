@@ -152,7 +152,7 @@ const PropertyForm = () => {
             toast.error('An error occurred! Failed to Create Property. Please try again.', {
                 position: 'top-center',
                 draggable: true,
-              });
+            });
         }
     };
     const kenyaCounties = [

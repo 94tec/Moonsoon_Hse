@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableHead, TableBody, TableCell, TableRow, Typography, Button } from '@mui/material';
+import RoomForm from '../../pages/RoomForm';
 
 const PropertyList = () => {
     const [properties, setProperties] = useState([]);
-
+    const [showRoomForm, setShowRoomForm] = useState(false);
+    const [propertyId, setPropertyId] = useState(null);
     useEffect(() => {
         const fetchProperties = async () => {
             try {
@@ -23,6 +25,15 @@ const PropertyList = () => {
 
         fetchProperties();
     }, []);
+     // Function to toggle the visibility of the room form
+    const toggleRoomForm = (propertyId) => {
+        setShowRoomForm(true);
+        setPropertyId(propertyId); // Set the propertyId when toggling the form
+    };
+    const handleCloseRoomForm = () => {
+        setShowRoomForm(false);
+        setPropertyId(null); // Reset propertyId when closing the form
+    };
     return (
         <div>
             <Typography variant="h4" gutterBottom>
@@ -83,7 +94,12 @@ const PropertyList = () => {
                             <TableCell>{property.contact_information.contact_details ? property.contact_information.contact_details.phone_number : ''}</TableCell>
                             <TableCell>{property.contact_information ? property.contact_information.contact_details.email_address : ''}</TableCell>
                             <TableCell className='action'>
-                                <Button variant="contained" color="primary" onClick={() => handleAddRoom(property._id)}>
+                                <Button 
+                                    variant="contained" color="primary" 
+                                    onClick={() => {
+                                        toggleRoomForm(property._id); // Toggle the visibility of the room form
+                                    }}
+                                >
                                     Add Room(s)
                                 </Button>
                                 <Button variant="outlined" color="primary" onClick={() => handleEditProperty(property._id)}>
@@ -95,6 +111,8 @@ const PropertyList = () => {
                     ))}
                 </TableBody>
             </Table>
+            {/* Render room form if showRoomForm is true */}
+            {showRoomForm && <RoomForm onClose={handleCloseRoomForm} propertyId={propertyId}/>}
         </div>
     );
 };
