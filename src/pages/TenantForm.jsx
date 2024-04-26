@@ -1,173 +1,335 @@
-import React from 'react';
-import { TextField, Button, Grid, Typography } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import React, { useState } from 'react';
+import { TextField,MenuItem, Button, Grid, Typography, Box} from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const TenantForm = () => {
-    const validationSchema = Yup.object().shape({
-        firstName: Yup.string().required('First Name is required'),
-        middleName: Yup.string().required('Middle Name is required'),
-        lastName: Yup.string().required('Last Name is required'),
-        idNumber: Yup.string().required('ID Number is required'),
-        dateOfBirth: Yup.date().required('Date of Birth is required'),
-        phoneNumber1: Yup.string().required('Phone Number 1 is required'),
-        email: Yup.string().email('Invalid email format').required('Email is required'),
-        address: Yup.object().shape({
-            street: Yup.string().required('Street is required'),
-            city: Yup.string().required('City is required'),
-            state: Yup.string().required('State is required'),
-            postalCode: Yup.string().required('Postal Code is required'),
-            country: Yup.string().required('Country is required')
-        }),
-        property: Yup.string().required('Property is required'),
-        unitNumber: Yup.string().required('Unit Number is required'),
-        roomCategory: Yup.string().required('Room Category is required'),
-        lease: Yup.object().shape({
-            startDate: Yup.date().required('Start Date is required'),
-            endDate: Yup.date().required('End Date is required'),
-            rentAmount: Yup.number().required('Rent Amount is required'),
-            depositAmount: Yup.number().required('Deposit Amount is required')
-        }),
-        emergencyContact: Yup.object().shape({
-            name: Yup.string().required('Emergency Contact Name is required'),
-            relationship: Yup.string().required('Relationship is required'),
-            phoneNumber: Yup.string().required('Emergency Contact Phone Number is required')
-        })
-    });
-
-    const handleSubmit = (values, actions) => {
-        console.log(values);
-        actions.setSubmitting(false);
-    };
-
-    const initialValues = {
+    const [formData, setFormData] = useState({
         firstName: '',
         middleName: '',
         lastName: '',
         idNumber: '',
         dateOfBirth: '',
-        email: '',
+        tennant_email: '',
         phoneNumber1: '',
-        address: {
-            street: '',
-            city: '',
-            state: '',
-            postalCode: '',
-            country: ''
-        },
+        phoneNumber2: '',
+        tenant_county: '',
+        tenant_city: '',
+        tenant_postalCode: '',
+        email: '',
+        name: '',
+        relationship: '', 
+        phoneNumber: '',
+        city: '',
+        county: '',
+        postalCode: '',
         property: '',
-        unitNumber: '',
+        unit_number: '',
+        roomNumber: '',
         roomCategory: '',
-        lease: {
-            startDate: '',
-            endDate: '',
-            rentAmount: '',
-            depositAmount: ''
+        startDate: '',
+        endDate: '',
+        rentAmount: '',
+        depositAmount: ''       
+    });
+    const [errorMessage, setErrorMessage] = useState('');
+    const [activeGroup, setActiveGroup] = useState(0); // State to track active slider group
+    const [isValid, setIsValid] = useState(true);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+    const handleGroupChange = (index) => {
+        setActiveGroup(index);
+    };
+    const handleSubmit = async () => {
+        try {
+            // Construct the request body object
+            const requestBody = {
+                firstName: formData.firstName,
+                middleName: formData.middleName,
+                lastName: formData.lastName,
+                idNumber: formData.idNumber,
+                dateOfBirth: formData.dateOfBirth,
+                tenant_email: formData.tenant_email,
+                phoneNumber1: formData.phoneNumber1,
+                phoneNumber2: formData.phoneNumber2,
+                tenant_address: {
+                    tenant_county: formData.county,
+                    tenant_street: formData.street,
+                    tenant_postalCode: formData.city
+                },
+                emergencyContact: 
+                {
+                    name: formData.name,
+                    email: formData.email,
+                    relationship: formData.relationship,
+                    phoneNumber: formData.phoneNumber,
+                    address: {
+                        county: formData.county,
+                        street: formData.street,
+                        postalCode: formData.postalCode
+                    },
+                },
+                property: formData.property,
+                unit_number: formData.unit_number,
+                roomCategory: formData.roomCategory,
+                lease: {
+                    startDate: formData.startDate,
+                    endDate: formData.endDate,
+                    rentAmount: formData.rentAmount,
+                    depositAmount: formData.depositAmount,
+                },
+                // Add more fields as needed
+            };
+    
+            const token = localStorage.getItem('token');
+            console.log('FormData:', formData);
+            const response = await axios.post('http://localhost:8000/api/users/tenants', requestBody, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log('Response:', response.data);
+            toast.success('Tenant Created successfully!', {
+                position: 'top-center',
+                draggable: true,
+              });
+            // Reset form after successful submission if needed
+            setFormData({
+                firstName: '',
+                middleName: '',
+                lastName: '',
+                idNumber: '',
+                dateOfBirth: '',
+                tennant_email: '',
+                phoneNumber1: '',
+                phoneNumber2: '',
+                tennant_city: '',
+                tennant_county: '',
+                tennant_postalCode: '',
+                email: '',
+                name: '',
+                relationship: '', 
+                phoneNumber: '',
+                city: '',
+                county: '',
+                postalCode: '',
+                property: '',
+                unit_number: '',
+                roomNumber: '',
+                roomCategory: '',
+                startDate: '',
+                endDate: '',
+                rentAmount: '',
+                depositAmount: ''    
+            });
+        } catch (error) {
+            console.error('Error submitting tenant:', error);
+            if (error.response) {
+                // If the error has a response object
+                setErrorMessage(error.response.data.message || 'An error occurred');
+              } else if (error.request) {
+                // If the request was made but no response was received
+                setErrorMessage('No response received from server');
+              } else {
+                // If an error occurred during the request setup
+                setErrorMessage('Error setting up the request');
+              }
+            toast.error('An error occurred! Failed to Create Tenant. Please try again.', {
+                position: 'top-center',
+                draggable: true,
+            });
+        }
+    };
+    const kenyaCounties = [
+        "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo Marakwet", "Embu", "Garissa", "Homa Bay", "Isiolo", "Kajiado",
+        "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu",
+        "Machakos", "Makueni", "Mandera", "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", "Nakuru", "Nandi",
+        "Narok", "Nyamira", "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka Nithi",
+        "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+    ];
+
+    // Define groups array for slider content
+    const groups = [
+        { 
+            name: "Tenant Basic Information", 
+            fields: [
+                'firstName', 'middleName', 'lastName', 'idNumber', 'dateOfBirth','tennant_email', 'phoneNumber1', 'phoneNumber2','tenant_county', 'tenant_street', 'tenant_postalCode', 
+            ] 
         },
-        emergencyContact: {
-            name: '',
-            relationship: '',
-            phoneNumber: ''
+        { 
+            name: "Emergency Contact Details", 
+            fields: ['name', 'email', 'relationship', 'phoneNumber','county','street', 'postalCode',] 
+        },
+        { 
+            name: "Property and Unit/Rooms Details", 
+            fields: ['property', 'unit_number', 'roomNumber', 'roomCategory', 'startDate', 'endDate', 'rentAmount', 'depositAmount'] 
+        }
+    ];
+    const handleNext = () => {
+        // Check if all fields in the current group are filled out
+        const currentGroup = groups[activeGroup];
+        const isValidGroup = currentGroup.fields.every(field => formData[field]);
+        setIsValid(isValidGroup);
+        
+        // If valid, proceed to the next group
+        if (isValidGroup && activeGroup < groups.length - 1) {
+            setActiveGroup(activeGroup + 1);
         }
     };
-    const renderFields = () => {
-        const basicInfoFields = {
-            firstName: Yup.string().required('First name is required'),
-            middleName: Yup.string().required('Middle name is required'),
-            lastName: Yup.string().required('Last name is required'),
-            idNumber: Yup.string().required('ID number is required'),
-            dateOfBirth: Yup.date().required('Date of birth is required'),
-            email: Yup.string().email('Invalid email format').required('Email is required'),
-            phoneNumber1: Yup.string().required('Phone number is required'),
-            phoneNumber2: Yup.string(),
-        };
-
-        const addressFields = {
-            street: Yup.string().required('Street is required'),
-            city: Yup.string().required('City is required'),
-            state: Yup.string().required('State is required'),
-            postalCode: Yup.string().required('Postal code is required'),
-            country: Yup.string().required('Country is required'),
-        };
-
-        const propertyAndLeaseFields = {
-            property: Yup.string().required('Property is required'),
-            unitNumber: Yup.string().required('Unit number is required'),
-            roomCategory: Yup.string().required('Room category is required'),
-            startDate: Yup.date().required('Start date is required'),
-            endDate: Yup.date().required('End date is required'),
-            rentAmount: Yup.number().required('Rent amount is required'),
-            depositAmount: Yup.number().required('Deposit amount is required'),
-        };
-
-        return (
-            <>
-                <Typography variant="h6" gutterBottom>
-                    Basic Info
-                </Typography>
-                <div className="form-fields">{renderSectionFields(basicInfoFields)}</div>
-
-                <Typography variant="h6" gutterBottom>
-                    Address
-                </Typography>
-                <div className="form-fields1">{renderSectionFields(addressFields)}</div>
-
-                <Typography variant="h6" gutterBottom>
-                    Property and Lease Info
-                </Typography>
-                <div className="form-fields2">{renderSectionFields(propertyAndLeaseFields)}</div>
-            </>
-        );
-    };
-
-    const renderSectionFields = (fields) => {
-        return Object.entries(fields).map(([fieldName, fieldSchema]) => (
-            <div key={fieldName} className="field">
-                <Field
-                    name={fieldName}
-                    as={TextField}
-                    fullWidth
-                    margin="normal"
-                    label={fieldName.charAt(0).toUpperCase() + fieldName.slice(1).replace(/_/g, ' ')}
-                    type={getFieldType(fieldSchema)}
-                    className="form-field"
-                />
-            </div>
-        ));
-    };
-
-    const getFieldType = (fieldSchema) => {
-        if (fieldSchema.type === Yup.string) {
-            return 'text';
-        } else if (fieldSchema.type === Yup.number) {
-            return 'number';
-        } else if (fieldSchema.type === Yup.date) {
-            return 'date';
-        }
-        return 'text';
-    };
-
     return (
-        <Grid className="container" justifyContent="center">
-            <Grid item xs={12} md={6}>
-                <Typography className="tenant-form-h4" variant="h4" gutterBottom>
+        <Grid container >
+            <Grid item xs={12}>
+                <Typography variant="h4" gutterBottom>
                     Tenant Form
                 </Typography>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
-                >
-                    {({ isSubmitting }) => (
-                        <Form className="form">
-                            {renderFields()}
-                            <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
-                                Submit
-                            </Button>
-                        </Form>
-                    )}
-                </Formik>
             </Grid>
+            <Grid item xs={12}>
+                {/* Slider buttons */}
+                {groups.map((group, index) => (
+                    <Button 
+                        key={index} 
+                        onClick={() => setActiveGroup(index)} 
+                        variant={activeGroup === index ? 'contained' : 'outlined'}
+                        style={{ marginRight: index !== groups.length - 1 ? '10px' : 0 }} // Add margin to all buttons except the last one
+                    >
+                        {group.name}
+                    </Button>
+                ))}
+            </Grid>
+            <Grid item xs={12}>
+                {/* Slider content */}
+                {groups.map((group, index) => (
+                    <div key={index} style={{ display: index === activeGroup ? 'block' : 'none' }}>
+                        <Typography variant="h6" gutterBottom>{group.name}</Typography>
+                        <div className="field-grid">
+                            {group.fields.map((fieldName, idx) => (
+                                <Box key={idx} className="field-box">
+                                    <Typography className="field-label">{fieldName}</Typography>
+                                    {/* Render TextField or Select based on field name */}
+                                    {(() => {
+                                        if (fieldName === 'property' || fieldName === 'county' || fieldName === 'unit_number' || fieldName === 'roomNumber' || fieldName === 'roomCategory') {
+                                            return (
+                                                <TextField
+                                                    fullWidth
+                                                    name={fieldName}
+                                                    value={formData[fieldName]}
+                                                    onChange={handleChange}
+                                                    select
+                                                    InputLabelProps={{ shrink: true }}
+                                                    SelectProps={{
+                                                        displayEmpty: true,
+                                                        MenuProps: {
+                                                            PaperProps: {
+                                                                style: {
+                                                                    maxHeight: 200, // Set max height of the menu
+                                                                },
+                                                            },
+                                                        },
+                                                    }}
+                                                    placeholder={`Select ${fieldName.replace('_', ' ')}`}
+                                                    className="field-input"
+                                                >
+                                                    <MenuItem value="" disabled>
+                                                        {`Select ${fieldName.replace('_', ' ')}`}
+                                                    </MenuItem>
+                                                    {/* Render options for select fields */}
+                                                    {fieldName === 'property' && (
+                                                         kenyaCounties.map((property, idx) => (
+                                                            <MenuItem key={idx} value={property}>
+                                                                {property}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'county' && (
+                                                        kenyaCounties.map((county, idx) => (
+                                                            <MenuItem key={idx} value={county}>
+                                                                {county}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'unit_number' && (
+                                                        kenyaCounties.map((unit_number, idx) => (
+                                                            <MenuItem key={idx} value={unit_number}>
+                                                                {unit_number}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'roomNumber' && (
+                                                        kenyaCounties.map((roomNumber, idx) => (
+                                                            <MenuItem key={idx} value={roomNumber}>
+                                                                {roomNumber}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'roomCategory' && (
+                                                        kenyaCounties.map((roomCategory, idx) => (
+                                                            <MenuItem key={idx} value={roomCategory}>
+                                                                {roomCategory}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                </TextField>
+                                            );
+                                        } else {
+                                            // Render regular TextField
+                                            return (
+                                                <TextField
+                                                    fullWidth
+                                                    name={fieldName}
+                                                    value={formData[fieldName]}
+                                                    onChange={handleChange}
+                                                    placeholder={
+                                                        fieldName === 'firstName' ? "Enter Tenant's First Name" :
+                                                        fieldName === 'middleName' ? "Enter Tenant's Middle Name" : 
+                                                        fieldName === 'lastName' ? "Enter Tenant's Last Name" : 
+                                                        fieldName === 'idNumber' ? "Enter ID Number" : 
+                                                        fieldName === 'dateOfBirth' ? "Enter Date of Birth" : 
+                                                        fieldName === 'tennant_email' ? "Enter Email Address" :
+                                                        fieldName === 'phoneNumber1' ? "Enter Phone Number" : 
+                                                        fieldName === 'phoneNumber2' ? "Enter alternative Phone Number" : 
+                                                        fieldName === 'tennant_street' ? "Street" : 
+                                                        fieldName === 'tennant_county' ? "County" : 
+                                                        fieldName === 'tennant_postalCode' ? "Enter Postal Code" : 
+                                                        fieldName === 'name' ? "Enter Emergency Contact Name" : 
+                                                        fieldName === 'email' ? "Enter Emergency Contact Email Address" : 
+                                                        fieldName === 'phoneNumber' ? "Enter Phone Number" : 
+                                                        fieldName === 'street' ? "Street" : 
+                                                        fieldName === 'County' ? "County" : 
+                                                        fieldName === 'postalCode' ? "Posta Code" : 
+                                                        ""
+                                                    }
+                                                    className="field-input"
+                                                />
+                                            );
+                                        }
+                                    })()}  
+                                </Box>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </Grid>
+            <Grid item xs={12}>
+                {/* Next button */}
+                {(activeGroup === 0 || activeGroup === 1) && (
+                    <Button variant="contained" color="primary" onClick={handleNext}>
+                        Next
+                    </Button>
+                )}
+                {/* Submit button */}
+                {activeGroup === groups.length - 1 && (
+                    <Button variant="contained" color="primary" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                )}
+            </Grid>
+            {errorMessage && <p>Error: {errorMessage}</p>}
         </Grid>
     );
 };

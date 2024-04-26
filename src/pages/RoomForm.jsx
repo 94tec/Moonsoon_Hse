@@ -72,7 +72,6 @@ const RoomForm = ({ onClose, propertyId }) => {
       try {
         const response = await axios.get(`http://localhost:8000/api/properties/${propertyId}/rooms`);
         setRooms(response.data.rooms);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
       }

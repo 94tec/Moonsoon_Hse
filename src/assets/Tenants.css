@@ -66,51 +66,16 @@
   .tenant-container-tabs button:hover {
     background-color: #0056b3; /* Adjust hover background color as needed */
   }
-  
   .tenant-container-main {
+    position: relative;
     grid-area: main;
-    padding: 8px;
-    background-color: var(--background-color); /* Background color of the navigation bar */
-  }
-  .form {
-    padding: 8px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: var(--background-color);  /*Background color of the navigation bar */
     color: var(--navTextColor);
-  }
-  .field{
-    padding: 0 4px;
-  }
-  .form-fields{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(calc(25% - 10px), 1fr)); /* Ensure four fields in one row with margin between */
-    gap: 10px; /* Adjust margin between fields */
-    padding: 4px;
-  }
-  .form-fields1{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(calc(18% - 10px), 1fr)); /* Ensure four fields in one row with margin between */
-    gap: 10px; /* Adjust margin between fields */
-    padding: 4px;
-  }
-  .form-fields2{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(calc(13% - 10px), 1fr)); /* Ensure four fields in one row with margin between */
-    gap: 10px; /* Adjust margin between fields */
-    padding: 4px;
-  }
-  .form button{
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #007bff; /* Adjust button background color as needed */
-    color: #fff; /* Adjust button text color as needed */
-    margin-right: 10px; /* Adjust margin between buttons as needed */
-  }
-  .tenant-form-h4{
-    color: var(--navTextColor);
-    font-size: 12px;
     font-family: 'Montserrat';
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
+
  
