@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { TextField,MenuItem, Button, Grid, Typography, Box} from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 const TenantForm = () => {
+    const [properties, setProperties] = useState([]);
     const [formData, setFormData] = useState({
         firstName: '',
         middleName: '',
@@ -33,11 +34,79 @@ const TenantForm = () => {
         rentAmount: '',
         depositAmount: ''       
     });
+    const [selectedProperty, setSelectedProperty] = useState(null); // State variable to hold selected property
+    const [selectedUnit, setSelectedUnit] = useState(null);
+
+    const handlePropertySelect = (event) => {
+        const selectedPropertyId = event.target.value;
+        const property = properties.find(property => property._id === selectedPropertyId);
+        setSelectedProperty(property);
+        // Reset selected unit when a new property is selected
+        setSelectedUnit(null);
+    };
+    const handleUnitSelect = () => {
+        // Assuming there's only one unit number associated with each property
+        const selectedUnitNumber = selectedProperty.units[0].unit_number;
+    
+        // Fetch rooms associated with the selected unit
+        fetchRooms(selectedProperty._id, selectedUnitNumber);
+    };
+    
+    const fetchRooms = async (propertyId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`http://localhost:8000/api/properties/${propertyId}/rooms`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            // Assuming response.data.rooms is an array of rooms associated with the selected unit
+            const rooms = response.data.rooms;
+            // Set the fetched rooms in state or perform any other necessary operation
+            // setRooms(rooms);
+        } catch (error) {
+            console.error('Error fetching rooms:', error);
+            // Handle error, such as showing an error message
+        }
+    };
+    useEffect(() => {
+        const fetchProperties = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get('http://localhost:8000/api/properties',{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setProperties(response.data.properties);
+            } catch (error) {
+                console.error('Error fetching properties:', error);
+            }
+        };
+
+        fetchProperties();
+    }, []);
+    // Calculate startDate based on the current date
+    const startDate = new Date(); // Current date
+
+    // Calculate endDate as 1 year ahead
+    const endDate = new Date(startDate);
+    endDate.setFullYear(endDate.getFullYear() + 1); // Set endDate to 1 year ahead
+
+    // Format startDate and endDate as yyyy-MM-dd strings
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+
     const [errorMessage, setErrorMessage] = useState('');
     const [activeGroup, setActiveGroup] = useState(0); // State to track active slider group
     const [isValid, setIsValid] = useState(true);
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (name === 'property') {
+            handlePropertySelect(e); // Update selected property
+        } else if (name === 'unit_number') {
+            handleUnitSelect(e); // Update selected unit number
+        }
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -128,6 +197,8 @@ const TenantForm = () => {
                 rentAmount: '',
                 depositAmount: ''    
             });
+            setSelectedProperty(null);
+            setSelectedUnit(null);
         } catch (error) {
             console.error('Error submitting tenant:', error);
             if (error.response) {
@@ -153,14 +224,18 @@ const TenantForm = () => {
         "Narok", "Nyamira", "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka Nithi",
         "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
     ];
-
+    const relationshipList = [
+        "Spouse", "Child", "Parent" 
+        // Add more relationship options as needed
+    ];
+    
     // Define groups array for slider content
     const groups = [
         { 
             name: "Tenant Basic Information", 
             fields: [
                 'firstName', 'middleName', 'lastName', 'idNumber', 'dateOfBirth','tennant_email', 'phoneNumber1', 'phoneNumber2','tenant_county', 'tenant_street', 'tenant_postalCode', 
-            ] 
+            ]
         },
         { 
             name: "Emergency Contact Details", 
@@ -213,13 +288,24 @@ const TenantForm = () => {
                                     <Typography className="field-label">{fieldName}</Typography>
                                     {/* Render TextField or Select based on field name */}
                                     {(() => {
-                                        if (fieldName === 'property' || fieldName === 'county' || fieldName === 'unit_number' || fieldName === 'roomNumber' || fieldName === 'roomCategory') {
+                                        if (
+                                            fieldName === 'property' || 
+                                            fieldName === 'county' || 
+                                            fieldName === 'unit_number' || 
+                                            fieldName === 'roomNumber' || 
+                                            fieldName === 'roomCategory'|| 
+                                            fieldName === 'relationship' ||
+                                            fieldName === 'startDate' ||
+                                            fieldName === 'endDate' ||
+                                            fieldName === 'rentAmount' ||
+                                            fieldName === 'depositAmount'
+                                        ) {
                                             return (
                                                 <TextField
                                                     fullWidth
                                                     name={fieldName}
                                                     value={formData[fieldName]}
-                                                    onChange={handleChange}
+                                                    onChange={(event) => handleChange(event)}
                                                     select
                                                     InputLabelProps={{ shrink: true }}
                                                     SelectProps={{
@@ -240,12 +326,65 @@ const TenantForm = () => {
                                                     </MenuItem>
                                                     {/* Render options for select fields */}
                                                     {fieldName === 'property' && (
-                                                         kenyaCounties.map((property, idx) => (
-                                                            <MenuItem key={idx} value={property}>
-                                                                {property}
+                                                        properties.map((property, idx) => (
+                                                            <MenuItem key={idx} value={property._id}>
+                                                                {property.property_title}
                                                             </MenuItem>
                                                         ))
                                                     )}
+                                                    {fieldName === 'unit_number' && selectedProperty && (
+                                                        // Map over the units of the selected property to render MenuItem for each unit
+                                                        selectedProperty.units.map((unit, idx) => (
+                                                            <MenuItem key={idx} value={unit.unit_number}>
+                                                                {unit.unit_number}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'roomNumber' && selectedProperty && (
+                                                        // Map over the room numbers associated with the selected property
+                                                        selectedProperty.units.flatMap(unit => unit.rooms).map((room, idx) => (
+                                                            <MenuItem key={idx} value={room.roomNumber}>
+                                                                {room.roomNumber}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'roomCategory' && selectedProperty && (
+                                                        // Map over the room categories associated with the selected property
+                                                        selectedProperty.units.flatMap(unit => unit.rooms).filter(room => room.roomNumber === formData.roomNumber).map((room, idx) => (
+                                                            <MenuItem key={idx} value={room.roomCategory}>
+                                                                {room.roomCategory}
+                                                            </MenuItem>
+                                                        ))
+                                                    )}
+                                                    {fieldName === 'startDate' && (
+                                                        <MenuItem value={formattedStartDate}>{formattedStartDate}</MenuItem>
+                                                    )}
+                                                    {fieldName === 'endDate' && (
+                                                        <MenuItem value={formattedEndDate}>{formattedEndDate}</MenuItem>
+                                                    )}
+                                                    {fieldName === 'rentAmount' && selectedProperty && (
+                                                        // Map over the room categories associated with the selected property
+                                                        selectedProperty.units
+                                                            .flatMap(unit => unit.rooms)
+                                                            .filter(room => room.roomNumber === formData.roomNumber)
+                                                            .map((room, idx) => (
+                                                                <MenuItem key={idx} value={room.pricePerRent}>
+                                                                    {room.pricePerRent}
+                                                                </MenuItem>
+                                                            ))
+                                                    )}
+                                                    {fieldName === 'depositAmount' && selectedProperty && (
+                                                        // Map over the room categories associated with the selected property
+                                                        selectedProperty.units
+                                                            .flatMap(unit => unit.rooms)
+                                                            .filter(room => room.roomNumber === formData.roomNumber)
+                                                            .map((room, idx) => (
+                                                                <MenuItem key={idx} value={room.depositRequired}>
+                                                                    {room.depositRequired}
+                                                                </MenuItem>
+                                                            ))
+                                                    )}
+
                                                     {fieldName === 'county' && (
                                                         kenyaCounties.map((county, idx) => (
                                                             <MenuItem key={idx} value={county}>
@@ -253,24 +392,18 @@ const TenantForm = () => {
                                                             </MenuItem>
                                                         ))
                                                     )}
-                                                    {fieldName === 'unit_number' && (
-                                                        kenyaCounties.map((unit_number, idx) => (
-                                                            <MenuItem key={idx} value={unit_number}>
-                                                                {unit_number}
+                                                    {fieldName === 'tenant_county' && (
+                                                        kenyaCounties.map((tenant_county, idx) => (
+                                                            <MenuItem key={idx} value={tenant_county}>
+                                                                {tenant_county}
                                                             </MenuItem>
                                                         ))
                                                     )}
-                                                    {fieldName === 'roomNumber' && (
-                                                        kenyaCounties.map((roomNumber, idx) => (
-                                                            <MenuItem key={idx} value={roomNumber}>
-                                                                {roomNumber}
-                                                            </MenuItem>
-                                                        ))
-                                                    )}
-                                                    {fieldName === 'roomCategory' && (
-                                                        kenyaCounties.map((roomCategory, idx) => (
-                                                            <MenuItem key={idx} value={roomCategory}>
-                                                                {roomCategory}
+                                                    
+                                                    {fieldName === 'relationship' && (
+                                                        relationshipList.map((relationship, idx) => (
+                                                            <MenuItem key={idx} value={relationship}>
+                                                                {relationship}
                                                             </MenuItem>
                                                         ))
                                                     )}
@@ -293,9 +426,9 @@ const TenantForm = () => {
                                                         fieldName === 'tennant_email' ? "Enter Email Address" :
                                                         fieldName === 'phoneNumber1' ? "Enter Phone Number" : 
                                                         fieldName === 'phoneNumber2' ? "Enter alternative Phone Number" : 
-                                                        fieldName === 'tennant_street' ? "Street" : 
-                                                        fieldName === 'tennant_county' ? "County" : 
-                                                        fieldName === 'tennant_postalCode' ? "Enter Postal Code" : 
+                                                        fieldName === 'tenant_street' ? "Street" : 
+                                                        fieldName === 'tenant_county' ? "County" : 
+                                                        fieldName === 'tenant_postalCode' ? "Enter Postal Code" : 
                                                         fieldName === 'name' ? "Enter Emergency Contact Name" : 
                                                         fieldName === 'email' ? "Enter Emergency Contact Email Address" : 
                                                         fieldName === 'phoneNumber' ? "Enter Phone Number" : 

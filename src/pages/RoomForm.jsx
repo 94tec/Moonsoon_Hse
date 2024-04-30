@@ -70,7 +70,12 @@ const RoomForm = ({ onClose, propertyId }) => {
     // Fetch rooms when propertyId changes
     const fetchRooms = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/properties/${propertyId}/rooms`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:8000/api/properties/${propertyId}/rooms`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+        }
+        });
         setRooms(response.data.rooms);
       } catch (error) {
         console.error('Error fetching rooms:', error);
