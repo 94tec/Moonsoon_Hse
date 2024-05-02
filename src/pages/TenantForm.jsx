@@ -12,7 +12,7 @@ const TenantForm = () => {
         lastName: '',
         idNumber: '',
         dateOfBirth: '',
-        tennant_email: '',
+        tenant_email: '',
         phoneNumber1: '',
         phoneNumber2: '',
         tenant_county: '',
@@ -96,6 +96,11 @@ const TenantForm = () => {
     // Format startDate and endDate as yyyy-MM-dd strings
     const formattedStartDate = startDate.toISOString().split('T')[0];
     const formattedEndDate = endDate.toISOString().split('T')[0];
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+
+    // Generate an array of years from the current year to 100 years back
+    const yearsArray = Array.from({ length: 101 }, (_, index) => currentYear - index);
 
     const [errorMessage, setErrorMessage] = useState('');
     const [activeGroup, setActiveGroup] = useState(0); // State to track active slider group
@@ -129,7 +134,7 @@ const TenantForm = () => {
                 phoneNumber2: formData.phoneNumber2,
                 tenant_address: {
                     tenant_county: formData.county,
-                    tenant_street: formData.street,
+                    tenant_city: formData.street,
                     tenant_postalCode: formData.city
                 },
                 emergencyContact: 
@@ -175,12 +180,12 @@ const TenantForm = () => {
                 lastName: '',
                 idNumber: '',
                 dateOfBirth: '',
-                tennant_email: '',
+                tenant_email: '',
                 phoneNumber1: '',
                 phoneNumber2: '',
-                tennant_city: '',
-                tennant_county: '',
-                tennant_postalCode: '',
+                tenant_city: '',
+                tenant_county: '',
+                tenant_postalCode: '',
                 email: '',
                 name: '',
                 relationship: '', 
@@ -234,7 +239,7 @@ const TenantForm = () => {
         { 
             name: "Tenant Basic Information", 
             fields: [
-                'firstName', 'middleName', 'lastName', 'idNumber', 'dateOfBirth','tennant_email', 'phoneNumber1', 'phoneNumber2','tenant_county', 'tenant_street', 'tenant_postalCode', 
+                'firstName', 'middleName', 'lastName', 'idNumber', 'dateOfBirth','tenant_email', 'phoneNumber1', 'phoneNumber2','tenant_county', 'tenant_street', 'tenant_postalCode', 
             ]
         },
         { 
@@ -289,7 +294,8 @@ const TenantForm = () => {
                                     {/* Render TextField or Select based on field name */}
                                     {(() => {
                                         if (
-                                            fieldName === 'property' || 
+                                            fieldName === 'property' ||
+                                            fieldName === 'tenant_county' || 
                                             fieldName === 'county' || 
                                             fieldName === 'unit_number' || 
                                             fieldName === 'roomNumber' || 
@@ -298,7 +304,7 @@ const TenantForm = () => {
                                             fieldName === 'startDate' ||
                                             fieldName === 'endDate' ||
                                             fieldName === 'rentAmount' ||
-                                            fieldName === 'depositAmount'
+                                            fieldName === 'depositAmount' 
                                         ) {
                                             return (
                                                 <TextField
@@ -384,7 +390,6 @@ const TenantForm = () => {
                                                                 </MenuItem>
                                                             ))
                                                     )}
-
                                                     {fieldName === 'county' && (
                                                         kenyaCounties.map((county, idx) => (
                                                             <MenuItem key={idx} value={county}>
@@ -422,8 +427,8 @@ const TenantForm = () => {
                                                         fieldName === 'middleName' ? "Enter Tenant's Middle Name" : 
                                                         fieldName === 'lastName' ? "Enter Tenant's Last Name" : 
                                                         fieldName === 'idNumber' ? "Enter ID Number" : 
-                                                        fieldName === 'dateOfBirth' ? "Enter Date of Birth" : 
-                                                        fieldName === 'tennant_email' ? "Enter Email Address" :
+                                                        fieldName === 'dateOfBirth' ? "Enter Date of Birth dd/mm/y" : 
+                                                        fieldName === 'tenant_email' ? "Enter Email Address" :
                                                         fieldName === 'phoneNumber1' ? "Enter Phone Number" : 
                                                         fieldName === 'phoneNumber2' ? "Enter alternative Phone Number" : 
                                                         fieldName === 'tenant_street' ? "Street" : 
