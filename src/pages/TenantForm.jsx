@@ -16,13 +16,13 @@ const TenantForm = () => {
         phoneNumber1: '',
         phoneNumber2: '',
         tenant_county: '',
-        tenant_city: '',
+        tenant_street: '',
         tenant_postalCode: '',
         email: '',
         name: '',
         relationship: '', 
         phoneNumber: '',
-        city: '',
+        street: '',
         county: '',
         postalCode: '',
         property: '',
@@ -133,9 +133,9 @@ const TenantForm = () => {
                 phoneNumber1: formData.phoneNumber1,
                 phoneNumber2: formData.phoneNumber2,
                 tenant_address: {
-                    tenant_county: formData.county,
-                    tenant_city: formData.street,
-                    tenant_postalCode: formData.city
+                    tenant_county: formData.tenant_county,
+                    tenant_street: formData.tenant_street,
+                    tenant_postalCode: formData.tenant_postalCode
                 },
                 emergencyContact: 
                 {
@@ -151,6 +151,7 @@ const TenantForm = () => {
                 },
                 property: formData.property,
                 unit_number: formData.unit_number,
+                roomNumber: formData.roomNumber,
                 roomCategory: formData.roomCategory,
                 lease: {
                     startDate: formData.startDate,
@@ -183,14 +184,14 @@ const TenantForm = () => {
                 tenant_email: '',
                 phoneNumber1: '',
                 phoneNumber2: '',
-                tenant_city: '',
+                tenant_street: '',
                 tenant_county: '',
                 tenant_postalCode: '',
                 email: '',
                 name: '',
                 relationship: '', 
                 phoneNumber: '',
-                city: '',
+                street: '',
                 county: '',
                 postalCode: '',
                 property: '',
@@ -205,21 +206,26 @@ const TenantForm = () => {
             setSelectedProperty(null);
             setSelectedUnit(null);
         } catch (error) {
-            console.error('Error submitting tenant:', error);
             if (error.response) {
                 // If the error has a response object
                 setErrorMessage(error.response.data.message || 'An error occurred');
+                toast.error(error.response.data.error,{
+                    position: 'top-center',
+                    draggable: true,
+                });
               } else if (error.request) {
                 // If the request was made but no response was received
                 setErrorMessage('No response received from server');
+                toast.error('No response received from server.', {
+                    position: 'top-center',
+                    draggable: true,
+                });
               } else {
-                // If an error occurred during the request setup
-                setErrorMessage('Error setting up the request');
+                toast.error('An error occurred! Failed to Create Tenant. Please try again.', {
+                    position: 'top-center',
+                    draggable: true,
+                });
               }
-            toast.error('An error occurred! Failed to Create Tenant. Please try again.', {
-                position: 'top-center',
-                draggable: true,
-            });
         }
     };
     const kenyaCounties = [
