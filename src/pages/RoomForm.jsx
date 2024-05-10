@@ -28,7 +28,14 @@ const RoomForm = ({ onClose, propertyId }) => {
           }
         ]
       };
-      console.log(requestBody);
+      // Check if property is already full
+      if (property.units && property.units.length > 0 && rooms.length >= property.units[0].size) {
+        toast.error('Failed to add room. Property is already full.', {
+          position: 'top-center',
+          draggable: true,
+        });
+        return;
+      }
       // Make the POST request to the backend
       const response = await axios.post(`http://localhost:8000/api/users/properties/${propertyId}/rooms`, requestBody, {
         headers: {
@@ -88,7 +95,18 @@ const RoomForm = ({ onClose, propertyId }) => {
       fetchRooms();
     }
   }, [propertyId]);
-  
+  const checkRoomsAdded = () => {
+    if (property.units && property.units.length > 0) {
+      const totalRoomsAdded = rooms.length;
+      if (totalRoomsAdded === property.units[0].size) {
+        return <span style={{ color: '#0aec61' }}>Full</span>;
+      } else {
+        const roomsNotAdded = property.units[0].size - totalRoomsAdded;
+        return <span style={{ color: 'orange' }}>{roomsNotAdded} rooms need to be added</span>;
+      }
+    }
+    return null;
+  };
 
   return (
     <div className='add_room_container'>
@@ -104,6 +122,7 @@ const RoomForm = ({ onClose, propertyId }) => {
           )}
         </p>
         <p>Total Rooms added: {rooms.length}</p>
+        <p>Status: {checkRoomsAdded()}</p>
       </div>
       <form onSubmit={handleSubmit(handleFormSubmit)} className='add_room_form'>
         <div>

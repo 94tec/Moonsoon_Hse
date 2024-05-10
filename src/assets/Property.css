@@ -73,7 +73,7 @@
     display: flex;
     justify-content: center;
     padding: 10px;
-    background-color: var(--background-color);  /*Background color of the navigation bar */
+    background-color: var(--background-color); 
     color: var(--navTextColor);
     font-family: 'Montserrat';
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -100,13 +100,7 @@
   .field-input {
     padding: 4px;
   }
-  .action Button:nth-child(2){
-    margin-left: 10px;
-  }
- .properties_table{
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    border-radius: .5rem;
- }
+  
   /*Room form css*/
   .add_room_container {
     width: 570px;
@@ -216,6 +210,88 @@
     transform: scale(1.05); /* Scale up when selected */
   }
 }
+.mainContainer{
+  width: 100%; /* Make the container full width */
+  padding: 10px; /* Add padding as needed */
+}
+.tableContent {
+  padding: 10px; /* Add padding as needed */
+}
+
+.tableWrapper {
+  overflow-x: auto; /* Add horizontal scroll if table is wider than the screen */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+}
+.properties_table {
+  width: 100%;
+  border-collapse: collapse; 
+  border-radius: .4rem;
+}
+.properties_table th {
+  background-color: #f2f2f2; /* Background color for header row */
+}
+.properties_table td {
+  height: 30px;
+}
+
+.properties_table th,
+.properties_table td {
+  width: calc(100% / 13); /* Equal width for each header cell */
+  padding: 8px; /* Adjust padding as needed */
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.properties_table th:nth-child(1),
+.properties_table td:nth-child(1),
+.properties_table th:nth-child(3),
+.properties_table td:nth-child(3),
+.properties_table th:nth-child(4),
+.properties_table td:nth-child(4),
+.properties_table th:nth-child(8),
+.properties_table td:nth-child(8) {
+  width: 10%; 
+}
+.properties_table th:nth-child(5),
+.properties_table td:nth-child(5),
+.properties_table th:nth-child(6),
+.properties_table td:nth-child(6),
+.properties_table th:nth-child(7),
+.properties_table td:nth-child(7) {
+  width: 2%; 
+}
+
+.properties_table th:nth-child(2),
+.properties_table td:nth-child(2)
+{
+  width: 25%;
+}
+.properties_table th:nth-child(9),
+.properties_table td:nth-child(9){
+  width: 20%; 
+}
+
+.properties_table th:nth-child(11),
+.properties_table td:nth-child(11){
+  width: 15%;
+}
+.properties_table th:nth-child(10),
+.properties_table td:nth-child(10) {
+  width: 12%; /* Larger width for column 10 */
+}
+.properties_table th:nth-child(12),
+.properties_table td:nth-child(12),
+.properties_table th:nth-child(13),
+.properties_table td:nth-child(13) {
+  width: 5%; /* Larger width for Action column */
+}
+
+.action{
+  width: 130px;
+  cursor: pointer;
+}
+
 
 
 

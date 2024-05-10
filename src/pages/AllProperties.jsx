@@ -3,7 +3,7 @@ import PropertyList from '../components/layout/PropertyList'
 
 const AllProperties = () => {
   return (
-    <div>
+    <div className="mainContainer">
       {/* Display your properties here */}
       <PropertyList />
     </div>

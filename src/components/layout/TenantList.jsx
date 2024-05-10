@@ -49,7 +49,7 @@ const TenantList = () => {
                             <TableCell>{tenant.idNumber}</TableCell>
                             <TableCell>{tenant.phoneNumber1}</TableCell>
                             <TableCell>{tenant.tenant_email}</TableCell>
-                            <TableCell>{tenant.property}</TableCell>
+                            <TableCell>{tenant.property_title}</TableCell>
                             <TableCell>{tenant.roomNumber}</TableCell>
                             <TableCell></TableCell>
                             {/* Add more table cells for additional data */}

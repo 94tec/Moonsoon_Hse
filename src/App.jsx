@@ -12,6 +12,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import Properties from './pages/Properties';
 import AllProperties from './pages/AllProperties';
 import Tenants from './pages/Tenants';
+import InvoiceList from './pages/InvoiceList';
 import { checkTokenValidity } from './components/auth/authService'; // Import token validation function
 // import Footer from './components/layout/Footer'
 
@@ -46,6 +47,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/properties" element={<Properties />} />
         <Route path="/tenants" element={<Tenants />} />
+        <Route path="/invoices" element={<InvoiceList />} />
       </Routes>
     </Router>
   );

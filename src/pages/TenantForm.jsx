@@ -150,6 +150,7 @@ const TenantForm = () => {
                     },
                 },
                 property: formData.property,
+                property_title: selectedProperty ? selectedProperty.property_title : '', // Retrieve property title from selected property
                 unit_number: formData.unit_number,
                 roomNumber: formData.roomNumber,
                 roomCategory: formData.roomCategory,
