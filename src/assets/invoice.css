@@ -139,15 +139,16 @@
 /* Style for the View button */
 .view-button {
     width: calc(7% - 10px); 
-    background-color: #007bff; /* Blue color */
-    color: #fff; /* White color */
-    border: none;
+    background-color: transparent; 
+    color: #007bff; 
+    border: 1px solid #007bff;
     border-radius: 5px;
-    padding: 8px 10px;
+    padding: 8px 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
   
 .view-button:hover {
     background-color: #0056b3; /* Darker blue color on hover */
+    color: #fff;
 }  

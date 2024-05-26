@@ -1,0 +1,129 @@
+.invoiceDetailContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    color: #6b6969;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+  .invoiceLogo{
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+  .invoiceLogo h4{
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--btnColor);
+    text-align: center;
+  }
+  .close-button{
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    outline: none;
+    border-radius: 2px solid #ddd;
+    background-color: transparent;
+    color: var(--btnColor);
+    cursor: pointer;
+  }
+  .loadingPane{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+    padding: 20px;
+    color: #000;
+    z-index: 1000;
+  }
+  .invoiceDetail h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .invoiceDetail p {
+    margin: 10px 0;
+    font-size: 16px;
+  }
+  
+  .invoiceDetail p strong {
+    display: inline-block;
+    width: 150px;
+  }
+  .invoiceNumber{
+    color: #ffaf47;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .invoiceStatus{
+    color: #ffaf47;
+  }
+  .invoiceHeader{
+    margin-top: 16px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .invoiceHeader .invoiceLeft{
+    text-align: start;
+  }
+  .invoiceHeader .invoiceRight{
+    text-align: start;
+  }
+  .invoiceDetail {
+    overflow-x: auto; /* Add horizontal scroll if table is wider than the screen */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-bottom: 32px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 8px;
+  }
+  .invoiveTable {
+    width: 100%;
+    border-collapse: collapse; 
+  }
+  .tableCell{
+    border: 2px solid #000 !important;
+  }
+.invoiveTable th,
+.invoiveTable td {
+  width: calc(100% / 2); /* Equal width for each header cell */
+  padding: 8px; /* Adjust padding as needed */
+}
+.invoiveTable th:nth-child(1),
+.invoiveTable td:nth-child(1)
+{
+  width: 75%;
+}
+.invoiveTable th:nth-child(2),
+.invoiveTable td:nth-child(2){
+  width: 25%; 
+}
+.make-payment{
+    padding: 8px 16px;
+    border-radius: 8px;
+    outline: none;
+    border-radius: 2px solid #ddd;
+    background-color: var(--btnColor);
+    color: #fff;
+    cursor: pointer;
+}
+  
+  
